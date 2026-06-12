@@ -1,0 +1,204 @@
+const svgParser = require("../services/svgParser");
+const svgPathExtractor = require("../services/svgPathExtractor");
+const pathService = require("../services/pathService");
+const fs = require("fs");
+
+
+exports.testSVG = async (req, res) => {
+  try {
+    const { filename, startRoomId: userStart, endRoomId: userEnd } = req.body;
+
+    if (!filename) {
+      return res
+        .status(400)
+        .json({ success: false, error: "No filename provided" });
+    }
+
+    const filePath = `./uploads/${filename}`;
+    const svg = fs.readFileSync(filePath, "utf8");
+
+    const parsed = await svgParser.parse(svg);
+    const result = svgPathExtractor.extract(parsed);
+
+    const { nodes, edges, entranceNodes } = result;
+    const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+
+    // =====================================================
+    // WALK CONTINUITY
+    // =====================================================
+    const grouped = new Map();
+    for (const node of nodes) {
+      if (node.type !== "WALK" || !node.source?.svgId) continue;
+      if (!grouped.has(node.source.svgId)) grouped.set(node.source.svgId, []);
+      grouped.get(node.source.svgId).push(node);
+    }
+
+    for (const group of grouped.values()) {
+      if (group.length < 2) continue;
+      group.sort((a, b) =>
+        Math.abs(a.x - b.x) >= Math.abs(a.y - b.y) ? a.x - b.x : a.y - b.y
+      );
+      for (let i = 0; i < group.length - 1; i++) {
+        const a = group[i];
+        const b = group[i + 1];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        const cost = dist > 180 ? dist * 2.5 : dist;
+
+        edges.push({ from: a.id, to: b.id, cost, type: "WALK_CONTINUITY" });
+        edges.push({ from: b.id, to: a.id, cost, type: "WALK_CONTINUITY" });
+      }
+    }
+
+    // =====================================================
+    // ROOM CLUSTER DETECTION
+    // =====================================================
+    const roomClusters = new Map();
+    for (const node of nodes) {
+      if (node.type !== "JUNCTION") continue;
+      const tag = node.intersectionId || node.source?.svgId || "";
+      const match = tag.match(/Room[_\s]?\d+|Entrance/gi);
+      if (!match) continue;
+      const roomId = match[0];
+      if (!roomClusters.has(roomId)) roomClusters.set(roomId, []);
+      roomClusters.get(roomId).push(node);
+    }
+
+    const roomAnchors = {};
+    for (const [roomId, cluster] of roomClusters.entries()) {
+      if (!cluster.length) continue;
+      const cx = cluster.reduce((s, n) => s + n.x, 0) / cluster.length;
+      const cy = cluster.reduce((s, n) => s + n.y, 0) / cluster.length;
+      let best = null;
+      let bestScore = Infinity;
+      for (const n of cluster) {
+        const d = Math.hypot(n.x - cx, n.y - cy);
+        if (d < bestScore) {
+          bestScore = d;
+          best = n;
+        }
+      }
+      roomAnchors[roomId] = best?.id;
+    }
+
+    // =====================================================
+    // START / END (USER-SELECTED)
+    // =====================================================
+    const startRoomId = userStart || "Entrance";
+    const endRoomId = (userEnd || "Room_1").replace(/\s+/g, "_");
+
+    console.log("--------CONTROLLER------")
+    console.log(roomAnchors)
+    console.log(roomAnchors[startRoomId])
+    console.log(roomAnchors[endRoomId])
+
+    const startNavId = roomAnchors[startRoomId];
+    const endNavId = roomAnchors[endRoomId];
+
+
+    if (!startNavId || !endNavId) {
+      return res.status(400).json({
+        success: false,
+        error: "Room anchors not found in node clusters",
+      });
+    }
+
+    // =====================================================
+    // NAV GRAPH
+    // =====================================================
+    const navNodes = nodes.filter(n => n.type === "WALK" || n.type === "JUNCTION");
+    const navEdges = edges.filter(e => {
+      const from = nodeMap.get(e.from);
+      const to = nodeMap.get(e.to);
+      return (
+        from &&
+        to &&
+        (from.type === "WALK" || from.type === "JUNCTION") &&
+        (to.type === "WALK" || to.type === "JUNCTION")
+      );
+    });
+
+    // =====================================================
+    // PATH (A*)
+    // =====================================================
+    const path = pathService.findShortestPath(navNodes, navEdges, startNavId, endNavId);
+
+    // =====================================================
+    // ROOM ANCHOR WRAPPING (UI)
+    // =====================================================
+    if (path.path.length > 0) {
+      path.path.unshift(startRoomId);
+      path.path.push(endRoomId);
+
+      const startNode = nodeMap.get(startNavId);
+      const endNode = nodeMap.get(endNavId);
+
+      path.debug.steps.unshift({
+        id: "START_ROOM",
+        type: "ROOM",
+        roomId: startRoomId,
+        navId: startNavId,
+        x: startNode?.x,
+        y: startNode?.y,
+      });
+
+      path.debug.steps.push({
+        id: "END_ROOM",
+        type: "ROOM",
+        roomId: endRoomId,
+        navId: endNavId,
+        x: endNode?.x,
+        y: endNode?.y,
+      });
+    }
+
+    // =====================================================
+    // RESPONSE
+    // =====================================================
+    return res.json({
+      success: true,
+      svg,
+      roomAnchors,
+      startRoomId,
+      endRoomId,
+      path,
+    });
+
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.uploadSVG = (req, res) => {
+  try {
+    if (!req.file) {
+      return res.json({ status: "failed" });
+    }
+
+    // multer already saved the file
+    return res.json({
+      status: "success",
+      filename: req.file.originalname, // return the filename
+      path: req.file.path, // optional: saved path on server
+    });
+  } catch (err) {
+    return res.json({ status: "failed" });
+  }
+};
+
+
+// exports.uploadSVG = (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.json({ status: "failed" });
+//     }
+
+//     // multer already saved the file
+//     return res.json({
+//       status: "success",
+//       filename: req.file.originalname, // return the filename
+//       path: req.file.path, // optional: saved path on server
+//     });
+//   } catch (err) {
+//     return res.json({ status: "failed" });
+//   }
+// };

@@ -1,0 +1,4 @@
+To push on vercel for new update:
+account email: jpquintana2024
+endpoint: https://svg-pathfinder-server.vercel.app/api/svg - test
+vercel --prod
