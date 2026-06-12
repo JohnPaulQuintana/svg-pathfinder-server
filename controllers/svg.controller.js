@@ -84,7 +84,7 @@ exports.testSVG = async (req, res) => {
     // START / END (USER-SELECTED)
     // =====================================================
     const startRoomId = userStart || "Entrance";
-    const endRoomId = (userEnd || "Room_1").replace(/\s+/g, "_");
+    const endRoomId = (userEnd || "Entrance").replace(/\s+/g, "_");
 
     console.log("--------CONTROLLER------")
     console.log(roomAnchors)
