@@ -3,7 +3,6 @@ const svgPathExtractor = require("../services/svgPathExtractor");
 const pathService = require("../services/pathService");
 const fs = require("fs");
 
-
 exports.testSVG = async (req, res) => {
   try {
     const { filename, startRoomId: userStart, endRoomId: userEnd } = req.body;
@@ -24,28 +23,63 @@ exports.testSVG = async (req, res) => {
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
     // =====================================================
-    // WALK CONTINUITY
+    // WALK CONTINUITY (FIXED)
     // =====================================================
     const grouped = new Map();
+
     for (const node of nodes) {
       if (node.type !== "WALK" || !node.source?.svgId) continue;
-      if (!grouped.has(node.source.svgId)) grouped.set(node.source.svgId, []);
+
+      if (!grouped.has(node.source.svgId)) {
+        grouped.set(node.source.svgId, []);
+      }
+
       grouped.get(node.source.svgId).push(node);
     }
 
+    const MAX_CONTINUITY_DISTANCE = 50;
+
     for (const group of grouped.values()) {
       if (group.length < 2) continue;
-      group.sort((a, b) =>
-        Math.abs(a.x - b.x) >= Math.abs(a.y - b.y) ? a.x - b.x : a.y - b.y
-      );
+
+      group.sort((a, b) => {
+        const da = a.x + a.y;
+        const db = b.x + b.y;
+        return da - db;
+      });
+
       for (let i = 0; i < group.length - 1; i++) {
         const a = group[i];
         const b = group[i + 1];
-        const dist = Math.hypot(a.x - b.x, a.y - b.y);
-        const cost = dist > 180 ? dist * 2.5 : dist;
 
-        edges.push({ from: a.id, to: b.id, cost, type: "WALK_CONTINUITY" });
-        edges.push({ from: b.id, to: a.id, cost, type: "WALK_CONTINUITY" });
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+
+        // 🚨 Prevent teleports
+        if (d > MAX_CONTINUITY_DISTANCE) {
+          console.warn(
+            "Skipping invalid continuity",
+            a.id,
+            "->",
+            b.id,
+            "distance:",
+            d,
+          );
+          continue;
+        }
+
+        edges.push({
+          from: a.id,
+          to: b.id,
+          cost: d,
+          type: "WALK_CONTINUITY",
+        });
+
+        edges.push({
+          from: b.id,
+          to: a.id,
+          cost: d,
+          type: "WALK_CONTINUITY",
+        });
       }
     }
 
@@ -86,14 +120,13 @@ exports.testSVG = async (req, res) => {
     const startRoomId = userStart || "Entrance";
     const endRoomId = (userEnd || "Entrance").replace(/\s+/g, "_");
 
-    console.log("--------CONTROLLER------")
-    console.log(roomAnchors)
-    console.log(roomAnchors[startRoomId])
-    console.log(roomAnchors[endRoomId])
+    console.log("--------CONTROLLER------");
+    console.log(roomAnchors);
+    console.log(roomAnchors[startRoomId]);
+    console.log(roomAnchors[endRoomId]);
 
     const startNavId = roomAnchors[startRoomId];
     const endNavId = roomAnchors[endRoomId];
-
 
     if (!startNavId || !endNavId) {
       return res.status(400).json({
@@ -105,8 +138,10 @@ exports.testSVG = async (req, res) => {
     // =====================================================
     // NAV GRAPH
     // =====================================================
-    const navNodes = nodes.filter(n => n.type === "WALK" || n.type === "JUNCTION");
-    const navEdges = edges.filter(e => {
+    const navNodes = nodes.filter(
+      (n) => n.type === "WALK" || n.type === "JUNCTION",
+    );
+    const navEdges = edges.filter((e) => {
       const from = nodeMap.get(e.from);
       const to = nodeMap.get(e.to);
       return (
@@ -120,7 +155,32 @@ exports.testSVG = async (req, res) => {
     // =====================================================
     // PATH (A*)
     // =====================================================
-    const path = pathService.findShortestPath(navNodes, navEdges, startNavId, endNavId);
+    const path = pathService.findShortestPath(
+      navNodes,
+      navEdges,
+      startNavId,
+      endNavId,
+    );
+
+    console.log("=== LONG EDGES ===");
+
+    for (const e of navEdges) {
+      const from = nodeMap.get(e.from);
+      const to = nodeMap.get(e.to);
+
+      if (!from || !to) continue;
+
+      const d = Math.hypot(from.x - to.x, from.y - to.y);
+
+      if (d > 100) {
+        console.log({
+          from: e.from,
+          to: e.to,
+          type: e.type,
+          distance: Math.round(d),
+        });
+      }
+    }
 
     // =====================================================
     // ROOM ANCHOR WRAPPING (UI)
@@ -162,7 +222,6 @@ exports.testSVG = async (req, res) => {
       endRoomId,
       path,
     });
-
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -184,21 +243,3 @@ exports.uploadSVG = (req, res) => {
     return res.json({ status: "failed" });
   }
 };
-
-
-// exports.uploadSVG = (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.json({ status: "failed" });
-//     }
-
-//     // multer already saved the file
-//     return res.json({
-//       status: "success",
-//       filename: req.file.originalname, // return the filename
-//       path: req.file.path, // optional: saved path on server
-//     });
-//   } catch (err) {
-//     return res.json({ status: "failed" });
-//   }
-// };

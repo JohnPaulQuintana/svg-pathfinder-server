@@ -1,5 +1,5 @@
 const extract = (data) => {
-console.log(data.intersections)
+  console.log(data.intersections);
   const rooms = data.rooms || [];
   const entrances = data.entrances || [];
   const walkable = data.walkable || [];
@@ -42,7 +42,7 @@ console.log(data.intersections)
       w.y1,
       "WALK",
       {},
-      { svgId: w.id, type: "line-endpoint-a" }
+      { svgId: w.id, type: "line-endpoint-a" },
     );
 
     const b = getNode(
@@ -50,15 +50,24 @@ console.log(data.intersections)
       w.y2,
       "WALK",
       {},
-      { svgId: w.id, type: "line-endpoint-b" }
+      { svgId: w.id, type: "line-endpoint-b" },
     );
 
     if (!a || !b) continue;
 
+    const d = dist(a, b);
+
     edges.push({
       from: a.id,
       to: b.id,
-      cost: dist(a, b),
+      cost: d,
+      type: "WALKABLE",
+    });
+
+    edges.push({
+      from: b.id,
+      to: a.id,
+      cost: d,
       type: "WALKABLE",
     });
   }
@@ -78,44 +87,48 @@ console.log(data.intersections)
       {
         svgId: i.id,
         type: "intersection",
-      }
+      },
     );
   }
 
   // =========================
   // 3. CONNECT INTERSECTIONS
   // =========================
+
+  const TOUCH_DISTANCE = 15;
+
   for (const i of intersections) {
     const iNode = nodes.find(
-      n =>
+      (n) =>
         n.type === "JUNCTION" &&
         Math.round(n.x) === Math.round(i.x) &&
-        Math.round(n.y) === Math.round(i.y)
+        Math.round(n.y) === Math.round(i.y),
     );
 
     if (!iNode) continue;
 
-    const candidates = nodes
-      .filter(n => n.type === "WALK")
-      .map(n => ({
-        n,
-        d: dist(n, iNode),
-      }))
-      .sort((a, b) => a.d - b.d)
-      .slice(0, 3);
+    const candidates = nodes.filter((n) => {
+      if (n.type !== "WALK") return false;
 
-    for (const c of candidates) {
+      const d = dist(n, iNode);
+
+      return d <= TOUCH_DISTANCE;
+    });
+
+    for (const walkNode of candidates) {
+      const d = dist(iNode, walkNode);
+
       edges.push({
         from: iNode.id,
-        to: c.n.id,
-        cost: c.d,
+        to: walkNode.id,
+        cost: d,
         type: "JUNCTION",
       });
 
       edges.push({
-        from: c.n.id,
+        from: walkNode.id,
         to: iNode.id,
-        cost: c.d,
+        cost: d,
         type: "JUNCTION",
       });
     }
@@ -154,7 +167,7 @@ console.log(data.intersections)
       {
         svgId: e.id,
         type: "entrance",
-      }
+      },
     );
 
     if (node) entranceNodes[e.id] = node.id;
@@ -163,7 +176,7 @@ console.log(data.intersections)
   return {
     nodes,
     edges,
-    roomNodes,        // now metadata only
+    roomNodes, // now metadata only
     entranceNodes,
     intersections,
   };

@@ -76,19 +76,20 @@ const findShortestPath = (nodes, edges, startId, endId) => {
       if (!neighborNode) continue;
       if (closedSet.has(neighbor.node)) continue;
 
-      const isCorridor =
-        neighbor.type === "CORRIDOR" || neighbor.type === "WALK_CONTINUITY";
-
+      const isCorridor = neighborNode.type === "WALK";
       // =========================
       // COST MODEL
       // =========================
       let cost = neighbor.cost;
 
-      if (isCorridor) cost *= 0.85;
-      if (neighbor.type === "JUNCTION") cost *= 2.5;
+      // prefer corridor movement
+      if (neighborNode.type === "WALK") {
+        cost *= 0.85;
+      }
 
-      if (cameFrom[current] === neighbor.node) {
-        cost *= 1.25;
+      // discourage junction hopping
+      if (neighborNode.type === "JUNCTION") {
+        cost *= 1.5;
       }
 
       const tentativeG = gScore[current] + cost;
@@ -180,6 +181,9 @@ const findShortestPath = (nodes, edges, startId, endId) => {
     steps.push(step);
   }
 
+
+  console.log("CLEANED PATH")
+  console.log(cleanedPath)
   return {
     path: cleanedPath,
     debug: {
