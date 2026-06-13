@@ -19,7 +19,7 @@ exports.testSVG = async (req, res) => {
     const parsed = await svgParser.parse(svg);
     const result = svgPathExtractor.extract(parsed);
 
-    const { nodes, edges, entranceNodes } = result;
+    const { nodes, edges, entranceNodes, roomNodes } = result;
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
     // =====================================================
@@ -217,6 +217,7 @@ exports.testSVG = async (req, res) => {
     return res.json({
       success: true,
       svg,
+      roomNodes,
       roomAnchors,
       startRoomId,
       endRoomId,

@@ -32,7 +32,8 @@ exports.parse = async (svgString) => {
     // =========================
     if (name === "rect") {
       rooms.push({
-        id: cleanId(id),
+        // id: cleanId(id),
+        id: id,
         x: Number(node.attributes?.x ?? 0),
         y: Number(node.attributes?.y ?? 0),
         width: Number(node.attributes?.width ?? 0),
