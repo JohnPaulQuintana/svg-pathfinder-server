@@ -62,7 +62,7 @@ exports.testSVG = async (req, res) => {
     const parsed = await svgParser.parse(svg);
     const result = svgPathExtractor.extract(parsed);
 
-    const { nodes, edges, roomNodes } = result;
+    const { nodes, edges, roomNodes, walkable } = result;
 
     // SVG complexity protection
     if (nodes.length > 5000) {
@@ -146,14 +146,27 @@ exports.testSVG = async (req, res) => {
     // ROOM CLUSTER DETECTION
     // =====================================================
     const roomClusters = new Map();
+    // for (const node of nodes) {
+    //   if (node.type !== "JUNCTION") continue;
+    //   const tag = node.intersectionId || node.source?.svgId || "";
+    //   const match = tag.match(/Room[_\s]?\d+|Entrance/gi);
+    //   if (!match) continue;
+    //   const roomId = match[0];
+    //   if (!roomClusters.has(roomId)) roomClusters.set(roomId, []);
+    //   roomClusters.get(roomId).push(node);
+    // }
     for (const node of nodes) {
       if (node.type !== "JUNCTION") continue;
-      const tag = node.intersectionId || node.source?.svgId || "";
-      const match = tag.match(/Room[_\s]?\d+|Entrance/gi);
-      if (!match) continue;
-      const roomId = match[0];
-      if (!roomClusters.has(roomId)) roomClusters.set(roomId, []);
-      roomClusters.get(roomId).push(node);
+
+      const locationId = node.intersectionId || node.source?.svgId;
+
+      if (!locationId) continue;
+
+      if (!roomClusters.has(locationId)) {
+        roomClusters.set(locationId, []);
+      }
+
+      roomClusters.get(locationId).push(node);
     }
 
     const roomAnchors = {};
@@ -277,6 +290,7 @@ exports.testSVG = async (req, res) => {
       success: true,
       svg,
       roomNodes,
+      walkable,
       roomAnchors,
       startRoomId,
       endRoomId,

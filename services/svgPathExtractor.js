@@ -177,6 +177,7 @@ const extract = (data) => {
     nodes,
     edges,
     roomNodes, // now metadata only
+    walkable,
     entranceNodes,
     intersections,
   };
