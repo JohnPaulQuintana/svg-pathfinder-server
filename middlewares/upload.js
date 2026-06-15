@@ -1,37 +1,53 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
-// make sure uploads folder exists
+// Ensure uploads folder exists
 const uploadFolder = path.join(__dirname, "../uploads");
+
 if (!fs.existsSync(uploadFolder)) {
-  fs.mkdirSync(uploadFolder);
+  fs.mkdirSync(uploadFolder, { recursive: true });
 }
 
-// disk storage
+// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadFolder);
   },
+
   filename: (req, file, cb) => {
-    // keep original name
-    cb(null, file.originalname);
+    const uniqueName =
+      crypto.randomBytes(8).toString("hex") +
+      "-" +
+      Date.now() +
+      ".svg";
+
+    cb(null, uniqueName);
   },
 });
 
-// filter only SVG files
+// SVG validation
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/svg+xml") {
-    cb(null, true);
-  } else {
-    cb(new Error("Only SVG files are allowed"), false);
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (
+    file.mimetype === "image/svg+xml" &&
+    ext === ".svg"
+  ) {
+    return cb(null, true);
   }
+
+  return cb(new Error("Only SVG files are allowed"), false);
 };
 
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  limits: {
+    fileSize: 500 * 1024, // 500 KB
+    files: 1,
+  },
 });
 
 module.exports = upload;

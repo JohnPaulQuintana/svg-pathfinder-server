@@ -1,6 +1,7 @@
 const svgParser = require("../services/svgParser");
 const svgPathExtractor = require("../services/svgPathExtractor");
 const pathService = require("../services/pathService");
+const nodePath = require("path");
 const fs = require("fs");
 
 exports.testSVG = async (req, res) => {
@@ -8,18 +9,76 @@ exports.testSVG = async (req, res) => {
     const { filename, startRoomId: userStart, endRoomId: userEnd } = req.body;
 
     if (!filename) {
-      return res
-        .status(400)
-        .json({ success: false, error: "No filename provided" });
+      return res.status(400).json({
+        success: false,
+        error: "No filename provided",
+      });
     }
 
-    const filePath = `./uploads/${filename}`;
+    if (userStart && typeof userStart !== "string") {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid start room",
+      });
+    }
+
+    if (userEnd && typeof userEnd !== "string") {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid end room",
+      });
+    }
+
+    // Prevent path traversal
+    const safeFilename = nodePath.basename(filename);
+
+    const filePath = nodePath.join(__dirname, "../uploads", safeFilename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        success: false,
+        error: "File not found",
+      });
+    }
+
+    // Extra file size protection
+    const stats = fs.statSync(filePath);
+
+    if (stats.size > 500 * 1024) {
+      return res.status(400).json({
+        success: false,
+        error: "SVG exceeds size limit",
+      });
+    }
+
     const svg = fs.readFileSync(filePath, "utf8");
+
+    if (!svg.includes("<svg")) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid SVG",
+      });
+    }
 
     const parsed = await svgParser.parse(svg);
     const result = svgPathExtractor.extract(parsed);
 
-    const { nodes, edges, entranceNodes, roomNodes } = result;
+    const { nodes, edges, roomNodes } = result;
+
+    // SVG complexity protection
+    if (nodes.length > 5000) {
+      return res.status(400).json({
+        success: false,
+        error: "SVG too complex (nodes)",
+      });
+    }
+
+    if (edges.length > 10000) {
+      return res.status(400).json({
+        success: false,
+        error: "SVG too complex (edges)",
+      });
+    }
+
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
     // =====================================================
@@ -54,7 +113,7 @@ exports.testSVG = async (req, res) => {
 
         const d = Math.hypot(a.x - b.x, a.y - b.y);
 
-        // 🚨 Prevent teleports
+        // Prevent teleports
         if (d > MAX_CONTINUITY_DISTANCE) {
           console.warn(
             "Skipping invalid continuity",
@@ -231,16 +290,31 @@ exports.testSVG = async (req, res) => {
 exports.uploadSVG = (req, res) => {
   try {
     if (!req.file) {
-      return res.json({ status: "failed" });
+      return res.status(400).json({
+        status: "failed",
+        error: "No file uploaded",
+      });
     }
 
-    // multer already saved the file
+    const content = fs.readFileSync(req.file.path, "utf8");
+
+    if (!content.includes("<svg")) {
+      fs.unlinkSync(req.file.path);
+
+      return res.status(400).json({
+        status: "failed",
+        error: "Invalid SVG file",
+      });
+    }
+
     return res.json({
       status: "success",
-      filename: req.file.originalname, // return the filename
-      path: req.file.path, // optional: saved path on server
+      filename: req.file.filename,
     });
   } catch (err) {
-    return res.json({ status: "failed" });
+    return res.status(500).json({
+      status: "failed",
+      error: err.message,
+    });
   }
 };
