@@ -1,20 +1,3 @@
-// const router = require("express").Router();
-// const controller = require("../controllers/svg.controller");
-// const upload = require("../middlewares/upload"); // <--- import it
-
-// router.get("/", (req, res) => {
-//   res.json({
-//     message: "Hello from Vercel",
-//   });
-// });
-
-// // test route
-// router.post("/test", controller.testSVG);
-
-// // upload svg route
-// router.post("/upload", upload.single("svg"), controller.uploadSVG);
-
-// module.exports = router;
 const router = require("express").Router();
 const rateLimit = require("express-rate-limit");
 
@@ -23,25 +6,29 @@ const upload = require("../middlewares/upload");
 
 const uploadLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: {
-    success: false,
-    error: "Too many uploads. Please try again later.",
+    status: "failed",
+    error: "Upload limit reached. Please try again in 15 minutes.",
   },
 });
 
 const testLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: {
-    success: false,
-    error: "Too many requests. Please try again later.",
+    status: "failed",
+    error: "Request limit reached. Please try again in 15 minutes.",
   },
 });
 
 router.get("/", (req, res) => {
   res.json({
-    message: "Hello from API",
+    message: "Hello from NaviLink",
   });
 });
 

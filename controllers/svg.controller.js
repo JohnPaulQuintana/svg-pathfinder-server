@@ -36,7 +36,7 @@ exports.testSVG = async (req, res) => {
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({
         success: false,
-        error: "File not found",
+        error: "SVG session expired. Please upload again.",
       });
     }
 
@@ -189,7 +189,9 @@ exports.testSVG = async (req, res) => {
     // =====================================================
     // START / END (USER-SELECTED)
     // =====================================================
-    const startRoomId = userStart || "Entrance";
+    const startRoomId = userStart?.toLowerCase().includes("entrance")
+      ? userStart
+      : "Entrance";
     const endRoomId = (userEnd || "Entrance").replace(/\s+/g, "_");
 
     console.log("--------CONTROLLER------");
@@ -234,25 +236,25 @@ exports.testSVG = async (req, res) => {
       endNavId,
     );
 
-    console.log("=== LONG EDGES ===");
+    // console.log("=== LONG EDGES ===");
 
-    for (const e of navEdges) {
-      const from = nodeMap.get(e.from);
-      const to = nodeMap.get(e.to);
+    // for (const e of navEdges) {
+    //   const from = nodeMap.get(e.from);
+    //   const to = nodeMap.get(e.to);
 
-      if (!from || !to) continue;
+    //   if (!from || !to) continue;
 
-      const d = Math.hypot(from.x - to.x, from.y - to.y);
+    //   const d = Math.hypot(from.x - to.x, from.y - to.y);
 
-      if (d > 100) {
-        console.log({
-          from: e.from,
-          to: e.to,
-          type: e.type,
-          distance: Math.round(d),
-        });
-      }
-    }
+    //   if (d > 100) {
+    //     console.log({
+    //       from: e.from,
+    //       to: e.to,
+    //       type: e.type,
+    //       distance: Math.round(d),
+    //     });
+    //   }
+    // }
 
     // =====================================================
     // ROOM ANCHOR WRAPPING (UI)
@@ -282,6 +284,31 @@ exports.testSVG = async (req, res) => {
         y: endNode?.y,
       });
     }
+
+    // const routeDistance = (() => {
+    //   if (!path.debug?.steps?.length) return 0;
+
+    //   let total = 0;
+
+    //   for (let i = 1; i < path.debug.steps.length; i++) {
+    //     const prev = path.debug.steps[i - 1];
+    //     const curr = path.debug.steps[i];
+
+    //     total += Math.hypot(curr.x - prev.x, curr.y - prev.y);
+    //   }
+
+    //   return total;
+    // })();
+
+    // const distanceMeters = routeDistance / 10;
+
+    // const etaMinutes = Math.max(1, Math.round(distanceMeters / 80));
+
+    // path.metrics = {
+    //   distanceSvg: Math.round(routeDistance),
+    //   distanceMeters: Math.round(distanceMeters),
+    //   etaMinutes,
+    // };
 
     // =====================================================
     // RESPONSE

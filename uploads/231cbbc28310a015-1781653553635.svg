@@ -1,0 +1,157 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="GROUND">
+<rect width="1200" height="800" fill="white"/>
+<g id="Space">
+<g id="R1">
+<rect id="Room1" x="119" y="332" width="144" height="79" fill="#D9D9D9"/>
+<text id="R1_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="188" y="375.864">R1</tspan></text>
+</g>
+<g id="E1">
+<rect id="Entrance" x="130" y="689" width="144" height="79" fill="#D9D9D9"/>
+<text id="E1_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="177" y="732.864">Entrance</tspan></text>
+</g>
+<g id="R2">
+<rect id="Room2" x="263" y="332" width="144" height="79" fill="#D9D9D9"/>
+<text id="R2_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="332" y="375.864">R2</tspan></text>
+</g>
+<g id="R3">
+<rect id="Room3" x="407" y="332" width="144" height="79" fill="#D9D9D9"/>
+<text id="R2_3" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="476" y="375.864">R3</tspan></text>
+</g>
+<g id="R4">
+<rect id="Room4" x="938" y="112" width="144" height="79" fill="#D9D9D9"/>
+<text id="R4_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="1007" y="155.864">R4</tspan></text>
+</g>
+<g id="R7">
+<rect id="Room7" x="766" y="27" width="144" height="79" fill="#D9D9D9"/>
+<text id="R7_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="835" y="70.8636">R7</tspan></text>
+</g>
+<g id="R8">
+<rect id="Room8" x="556" y="33" width="144" height="79" fill="#D9D9D9"/>
+<text id="R8_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="625" y="76.8636">R8</tspan></text>
+</g>
+<g id="R9">
+<rect id="Room9" x="354" y="33" width="144" height="79" fill="#D9D9D9"/>
+<text id="R9_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="423" y="76.8636">R9</tspan></text>
+</g>
+<g id="R10">
+<rect id="Room10" x="164" y="33" width="144" height="79" fill="#D9D9D9"/>
+<text id="R10_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="233" y="76.8636">R10</tspan></text>
+</g>
+<g id="R11">
+<rect id="Room11" x="119" y="253" width="144" height="79" fill="#D9D9D9"/>
+<text id="R11_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="188" y="296.864">R11</tspan></text>
+</g>
+<g id="R5">
+<rect id="Room5" x="938" y="278" width="144" height="79" fill="#D9D9D9"/>
+<text id="R5_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="1007" y="321.864">R5</tspan></text>
+</g>
+<g id="R6">
+<rect id="Room6" x="938" y="456" width="144" height="79" fill="#D9D9D9"/>
+<text id="R6_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="1007" y="499.864">R6</tspan></text>
+</g>
+<g id="R12">
+<rect id="Room12" x="258" y="254" width="149" height="79" fill="#D9D9D9"/>
+<text id="R12_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="327" y="297.864">R12</tspan></text>
+</g>
+<g id="R13">
+<rect id="Room13" x="407" y="254" width="144" height="79" fill="#D9D9D9"/>
+<text id="R13_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="476" y="297.864">R13</tspan></text>
+</g>
+<g id="C1">
+<rect id="Basketball Court" x="600" y="232" width="195" height="253" fill="#D9D9D9"/>
+<text id="C1_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="650" y="353.864">Basketball Court</tspan></text>
+</g>
+<g id="B1">
+<rect id="Building 1" x="350" y="617" width="292" height="119" fill="#D9D9D9"/>
+<text id="Building 1_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="457" y="679.864">Building 1</tspan></text>
+</g>
+<g id="B2">
+<rect id="Building 2" x="681" y="620" width="164" height="119" fill="#D9D9D9"/>
+<text id="Building 2_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="729" y="679.864">Building 2</tspan></text>
+</g>
+<g id="B3">
+<rect id="Building 3" x="933" y="620" width="149" height="119" fill="#D9D9D9"/>
+<text id="Building 3_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="976.61" y="679.864">Building 3</tspan></text>
+</g>
+<g id="C2">
+<rect id="Canteen" x="30" y="433" width="134" height="210" fill="#D9D9D9"/>
+<text id="Canteen_2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="73" y="537.864">Canteen</tspan></text>
+</g>
+</g>
+<g id="Walkable">
+<line id="Line 23" x1="839.5" y1="159.019" x2="837.5" y2="106.019" stroke="black"/>
+<line id="Line 1" x1="203.5" y1="689" x2="203.5" y2="548" stroke="black"/>
+<line id="Line 7" x1="203.5" y1="548" x2="203.5" y2="421" stroke="black"/>
+<line id="Line 3" x1="347.5" y1="411" x2="347.5" y2="547" stroke="black"/>
+<line id="Line 4" x1="484.5" y1="409" x2="484.5" y2="547" stroke="black"/>
+<line id="Line 5" x1="839.5" y1="323.006" x2="837.5" y2="159.006" stroke="black"/>
+<line id="Line 11" x1="838.5" y1="500.997" x2="839.5" y2="323.997" stroke="black"/>
+<line id="Line 6" x1="837.995" y1="159.5" x2="937.995" y2="158.5" stroke="black"/>
+<line id="Line 8" x1="203.993" y1="548.5" x2="347.993" y2="546.486" stroke="black"/>
+<line id="Line 9" x1="346.996" y1="547.5" x2="483.996" y2="546.5" stroke="black"/>
+<line id="Line 10" x1="484.003" y1="546.5" x2="681.003" y2="547.495" stroke="black"/>
+<line id="Line 12" x1="839.005" y1="323.5" x2="938.005" y2="324.51" stroke="black"/>
+<line id="Line 15" x1="837" y1="161.5" x2="633" y2="161.5" stroke="black"/>
+<line id="Line 16" x1="632.5" y1="162" x2="632.5" y2="112" stroke="black"/>
+<line id="Line 18" x1="422.5" y1="160" x2="422.5" y2="112" stroke="black"/>
+<line id="Line 20" x1="240.5" y1="162" x2="240.5" y2="112" stroke="black"/>
+<line id="Line 17" x1="632" y1="161.5" x2="485" y2="161.5" stroke="black"/>
+<line id="Line 19" x1="338" y1="161.5" x2="241" y2="161.5" stroke="black"/>
+<line id="Line 21" x1="839.5" y1="548" x2="839.5" y2="501" stroke="black"/>
+<line id="Line 22" x1="839" y1="500.5" x2="938" y2="500.5" stroke="black"/>
+<line id="Line 24" x1="240" y1="160.5" x2="205" y2="160.5" stroke="black"/>
+<line id="Line 25" x1="205.5" y1="161.006" x2="204.489" y2="252.005" stroke="black"/>
+<line id="Line 26" x1="338" y1="160.5" x2="426" y2="160.5" stroke="black"/>
+<line id="Line 27" x1="426.008" y1="160.5" x2="485.008" y2="161.5" stroke="black"/>
+<line id="Line 28" x1="484.5" y1="162.005" x2="483.5" y2="253.005" stroke="black"/>
+<line id="Line 29" x1="338.5" y1="161" x2="338.5" y2="253" stroke="black"/>
+<line id="Line 30" x1="681" y1="547.5" x2="755" y2="547.5" stroke="black"/>
+<line id="Line 31" x1="682.5" y1="547" x2="682.5" y2="486" stroke="black"/>
+<line id="Line 32" x1="485.5" y1="546.007" x2="484.5" y2="618.007" stroke="black"/>
+<line id="Line 33" x1="755.5" y1="547" x2="755.5" y2="619" stroke="black"/>
+<line id="Line 34" x1="756.006" y1="547.5" x2="840.006" y2="548.512" stroke="black"/>
+<line id="Line 35" x1="840" y1="548.5" x2="897" y2="548.5" stroke="black"/>
+<line id="Line 36" x1="897.5" y1="549" x2="897.5" y2="636" stroke="black"/>
+<line id="Line 37" x1="898" y1="635.5" x2="933" y2="635.5" stroke="black"/>
+<line id="Line 38" x1="203" y1="549.5" x2="164" y2="549.5" stroke="black"/>
+</g>
+<g id="Intersection">
+<circle id="Canteen_3" cx="164.5" cy="548.5" r="7.5" fill="#FC7276"/>
+<ellipse id="Ellipse 17" cx="484" cy="162" rx="7" ry="6" fill="#FC7276"/>
+<circle id="Room11_2" cx="202.5" cy="246.5" r="7.5" fill="#FC7276"/>
+<circle id="Room12_2" cx="337.5" cy="246.5" r="7.5" fill="#FC7276"/>
+<circle id="Room13_2" cx="484.5" cy="245.5" r="7.5" fill="#FC7276"/>
+<circle id="Room7_2" cx="839.5" cy="105.5" r="7.5" fill="#FC7276"/>
+<ellipse id="Ellipse 4" cx="347" cy="547" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room9_2" cx="425" cy="112" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room10_2" cx="241" cy="112" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room8_2" cx="632" cy="112" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room2_2" cx="347" cy="411" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room3_2" cx="484" cy="411" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 7" cx="484" cy="547" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Building 1_3" cx="485" cy="617" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 8" cx="838" cy="546" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 15" cx="838" cy="500" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 10" cx="840" cy="325" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room6_2" cx="938" cy="500" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room4_2" cx="938" cy="159" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 9" cx="840" cy="160" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 1" cx="204" cy="549" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room1_2" cx="204" cy="411" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Entrance_2" cx="204" cy="683" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Room5_2" cx="938" cy="324" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 12" cx="633" cy="161" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 13" cx="425" cy="161" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 16" cx="338" cy="159" rx="7" ry="6" fill="#FC7276"/>
+<ellipse id="Ellipse 14" cx="241" cy="159" rx="7" ry="6" fill="#FC7276"/>
+<circle id="Ellipse 18" cx="681.5" cy="547.5" r="7.5" fill="#FC7276"/>
+<circle id="Basketball Court_2" cx="681.5" cy="486.5" r="7.5" fill="#FC7276"/>
+<circle id="Ellipse 19" cx="755.5" cy="548.5" r="7.5" fill="#FC7276"/>
+<circle id="Building 2_3" cx="754.5" cy="618.5" r="7.5" fill="#FC7276"/>
+<circle id="Ellipse 20" cx="897.5" cy="548.5" r="7.5" fill="#FC7276"/>
+<circle id="Ellipse 21" cx="897.5" cy="635.5" r="7.5" fill="#FC7276"/>
+<circle id="Building 3_3" cx="933.5" cy="635.5" r="7.5" fill="#FC7276"/>
+</g>
+</g>
+</svg>
