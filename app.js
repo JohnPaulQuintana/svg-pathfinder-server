@@ -3,7 +3,11 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const svgRoutes = require("./routes/svg.routes");
+const dbRoutes = require("./routes/db.routes")
+
 const startCleanupJob = require("./utils/fileCleanup");
+
+
 
 const app = express();
 
@@ -41,6 +45,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/svg", svgRoutes);
+app.use("/api/svg/analytics", dbRoutes);
 
 startCleanupJob();
 
