@@ -1,3 +1,4 @@
+const UAParser = require("ua-parser-js");
 const pool = require("../config/db");
 
 exports.registerVisitor = async (req, res) => {
@@ -5,11 +6,24 @@ exports.registerVisitor = async (req, res) => {
     const {
       visitor_id,
       language,
-      platform,
       screen_width,
       screen_height,
       timezone,
     } = req.body;
+
+    const userAgent = req.headers["user-agent"] || "";
+
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+
+    const platform =
+      result.os.name || "Unknown";
+
+    const browser =
+      result.browser.name || "Unknown";
+
+    const device =
+      result.device.type || "desktop";
 
     await pool.query(
       `
@@ -30,16 +44,21 @@ exports.registerVisitor = async (req, res) => {
       [
         visitor_id,
         req.ip,
-        req.headers["user-agent"],
+        userAgent,
         language,
-        platform,
+        `${platform} (${browser} - ${device})`,
         screen_width,
         screen_height,
         timezone,
       ]
     );
 
-    res.json({ success: true });
+    res.json({
+      success: true,
+      platform,
+      browser,
+      device,
+    });
   } catch (err) {
     console.error(err);
 
