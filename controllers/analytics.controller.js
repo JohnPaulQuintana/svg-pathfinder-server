@@ -183,14 +183,14 @@ exports.getStats = async (req, res) => {
     res.json({
       visitors: Number(visitors.rows[0].count),
       visits: Number(visits.rows[0].count),
-      events: Number(events.rows[0].count),
-      sessions: Number(sessions.rows[0].count),
-      todayVisitors: Number(
-        todayVisitors.rows[0].count
-      ),
-      todayVisits: Number(
-        todayVisits.rows[0].count
-      ),
+      // events: Number(events.rows[0].count),
+      // sessions: Number(sessions.rows[0].count),
+      // todayVisitors: Number(
+      //   todayVisitors.rows[0].count
+      // ),
+      // todayVisits: Number(
+      //   todayVisits.rows[0].count
+      // ),
     });
   } catch (err) {
     console.error(err);
